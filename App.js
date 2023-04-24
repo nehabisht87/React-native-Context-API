@@ -3,13 +3,16 @@ import React from 'react';
 import Navbar from './src/screens/navbar';
 import TodoList from './src/screens/TodoList';
 import ThemeContextProvider from './src/contexts/ThemeContexts';
+import AuthContextProvider from './src/contexts/AuthContext';
 const App = () => {
   return (
     <View style={{flex: 1}}>
-      <ThemeContextProvider>
-        <Navbar />
-        <TodoList />
-      </ThemeContextProvider>
+      <AuthContextProvider>
+        <ThemeContextProvider>
+          <Navbar />
+          <TodoList />
+        </ThemeContextProvider>
+      </AuthContextProvider>
     </View>
   );
 };

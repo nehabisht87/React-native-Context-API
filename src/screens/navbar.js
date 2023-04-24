@@ -1,37 +1,50 @@
-import {Text, StyleSheet, View} from 'react-native';
+import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import React, {Component} from 'react';
 import {headerTabData} from '../appConstants';
 import {ThemeContext} from '../contexts/ThemeContexts';
+import {AuthContext} from '../contexts/AuthContext';
 
 export default class Navbar extends Component {
   static contextType = ThemeContext;
+  static contextType = AuthContext;
   render() {
     return (
-      <ThemeContext.Consumer>
-        {context => {
-          // console.log('this.context', this.context);
-
-          const {isDarkTheme, darkTheme, lightTheme} = this.context;
-          const theme = isDarkTheme ? darkTheme : lightTheme;
+      <AuthContext.Consumer>
+        {authContext => {
           return (
-            <View style={{flex: 1, backgroundColor: 'white'}}>
-              <View style={[styles.headerContainer, theme]}>
-                <Text style={[styles.headerText, theme]}>Context</Text>
-                <View style={styles.headerTabContainer}>
-                  {headerTabData.map((item, index) => {
-                    console.log('item', item);
-                    return (
-                      <Text key={index} style={[styles.headerTabText]}>
-                        {item}
-                      </Text>
-                    );
-                  })}
-                </View>
-              </View>
-            </View>
+            <ThemeContext.Consumer>
+              {themeContext => {
+                const {isDarkTheme, darkTheme, lightTheme} = themeContext;
+                const {isLoggedIn, changeAuthStatus} = authContext;
+                const theme = isDarkTheme ? darkTheme : lightTheme;
+                return (
+                  <View style={{flex: 1, backgroundColor: 'white'}}>
+                    <View style={[styles.headerContainer, theme]}>
+                      <Text style={[styles.headerText, theme]}>Context</Text>
+                      <TouchableOpacity onPress={changeAuthStatus}>
+                        <Text style={[styles.headerText, theme]}>
+                          {isLoggedIn ? 'Logged In' : 'Logged out'}
+                        </Text>
+                      </TouchableOpacity>
+
+                      <View style={styles.headerTabContainer}>
+                        {headerTabData.map((item, index) => {
+                          console.log('item', item);
+                          return (
+                            <Text key={index} style={[styles.headerTabText]}>
+                              {item}
+                            </Text>
+                          );
+                        })}
+                      </View>
+                    </View>
+                  </View>
+                );
+              }}
+            </ThemeContext.Consumer>
           );
         }}
-      </ThemeContext.Consumer>
+      </AuthContext.Consumer>
     );
   }
 }
